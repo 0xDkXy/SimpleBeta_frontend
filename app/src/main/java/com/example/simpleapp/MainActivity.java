@@ -138,24 +138,37 @@ public class MainActivity extends AppCompatActivity {
                 0.6f);
     }
 
-    public void loginRequest(String user, String password){
+    private HttpURLConnection initConn(String UrlApi){
+        /**
+         *
+         */
+        HttpURLConnection conn = null;
+        try{
+            URL url = new URL(UrlApi);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(3000);
+            conn.setReadTimeout(3000);
+            //设置请求方式 GET / POST 一定要大小
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json"); // 设置发送数据的格式
+            conn.setRequestProperty("accept", "application/json"); // 设置发送数据的格式
+            conn.setDoInput(true);
+            conn.setDoOutput(false);
+            conn.connect();
+        }catch (Exception e){
+            Log.e("HttpConn",e.getMessage());
+        }
+        return conn;
+    }
+
+    private void loginRequest(String user, String password){
         HttpURLConnection connection = null;
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("id", user);
             params.put("passwd", password);
             JSONObject jsonParam =new JSONObject(params);
-            URL url = new URL("http://0xdkxy.top:10000/login/signIn");
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(3000);
-            connection.setReadTimeout(3000);
-            //设置请求方式 GET / POST 一定要大小
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json"); // 设置发送数据的格式
-            connection.setRequestProperty("accept", "application/json"); // 设置发送数据的格式
-            connection.setDoInput(true);
-            connection.setDoOutput(false);
-            connection.connect();
+            connection = initConn("http://0xdkxy.top:10000/login/signIn");
             DataOutputStream dos=new DataOutputStream(connection.getOutputStream());
             dos.writeBytes(jsonParam.toString());
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -190,24 +203,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void signUp(String user, String password) {
+
+
+    private void signUp(String user, String password) {
         HttpURLConnection connection = null;
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("id", user);
             params.put("passwd", password);
             JSONObject jsonParam = new JSONObject(params);
-            URL url = new URL("http://0xdkxy.top:10000/login/signUp");
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(3000);
-            connection.setReadTimeout(3000);
-            //设置请求方式 GET / POST 一定要大小
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json"); // 设置发送数据的格式
-            connection.setRequestProperty("accept", "application/json"); // 设置发送数据的格式
-            connection.setDoInput(true);
-            connection.setDoOutput(false);
-            connection.connect();
+            connection = initConn("http://0xdkxy.top:10000/login/signUp");
             DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
             dos.writeBytes(jsonParam.toString());
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
