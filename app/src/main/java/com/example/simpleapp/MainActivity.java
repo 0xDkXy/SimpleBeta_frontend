@@ -47,34 +47,17 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
         setContentView(R.layout.activity_main);
 
-        // 设置 QMUILinearLayout 阴影颜色和圆角
-        QMUILinearLayout qmuiLayout = findViewById(R.id.qmuiLayout);
-//        qmuiLayout.setShadowColor(0xff0000ff); // 蓝色阴影
+        initTopBar();
+        initLogo();
+        initLoginEditText();
 
-        int qradius=QMUILayoutHelper.RADIUS_OF_HALF_VIEW_WIDTH;
-        qmuiLayout.setRadius(qradius);
-        qmuiLayout.setRadiusAndShadow(qradius,
-                QMUIDisplayHelper.dp2px(MainActivity.this,11),
-                0.6f);
-
-        // 设置topbar title
-        QMUITopBarLayout loginTopbar=findViewById(R.id.loginTopbar);
-        loginTopbar.setTitle("LOGIN");
-
-        // 设置登陆文本输入框阴影
-        QMUILinearLayout loginQMUILL = findViewById(R.id.loginQMUILL);
-        int LoginRadius=15;
-//        loginQMUILL.setRadius(LoginRadius);
-        loginQMUILL.setRadiusAndShadow(LoginRadius,
-                QMUIDisplayHelper.dp2px(MainActivity.this,11),
-                0.6f);
-
-        // 沉浸式状态栏
-        QMUIStatusBarHelper.translucent(this);
-
+    }
+    private void initLogin(String UID,String passwd){
+        /**
+         *
+         */
         EditText userNameIt = findViewById(R.id.usernameIt);
         EditText passwordIt = findViewById(R.id.passwordIt);
-
 
         Button loginBt = (Button) findViewById(R.id.loginBt);
         loginBt.setOnClickListener(new View.OnClickListener(){
@@ -97,23 +80,62 @@ public class MainActivity extends AppCompatActivity {
         Button signUpBt = (Button) findViewById(R.id.signupBt);
         signUpBt.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-            EditText userNameIt = findViewById(R.id.usernameIt);
-            EditText passwordIt = findViewById(R.id.passwordIt);
-            if (userNameIt.getText().toString().equals("") || passwordIt.getText().toString().equals(""))
-                Toast.makeText(MainActivity.this, "用户名及密码不能为空!",
-                        Toast.LENGTH_SHORT).show();
-            else {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        EditText usernameIt = findViewById(R.id.usernameIt);
-                        EditText passwordIt = findViewById(R.id.passwordIt);
-                        signUp(usernameIt.getText().toString(), passwordIt.getText().toString());
-                    }
-                }).start();
+                EditText userNameIt = findViewById(R.id.usernameIt);
+                EditText passwordIt = findViewById(R.id.passwordIt);
+                if (userNameIt.getText().toString().equals("") || passwordIt.getText().toString().equals(""))
+                    Toast.makeText(MainActivity.this, "用户名及密码不能为空!",
+                            Toast.LENGTH_SHORT).show();
+                else {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            EditText usernameIt = findViewById(R.id.usernameIt);
+                            EditText passwordIt = findViewById(R.id.passwordIt);
+                            signUp(usernameIt.getText().toString(), passwordIt.getText().toString());
+                        }
+                    }).start();
+                }
             }
-        }
-    });
+        });
+    }
+
+    private void initTopBar(){
+        /**
+         * 初始化topbar
+         */
+        // 设置topbar title
+        QMUITopBarLayout loginTopbar=findViewById(R.id.loginTopbar);
+        loginTopbar.setTitle("LOGIN");
+
+        // 沉浸式状态栏
+        QMUIStatusBarHelper.translucent(this);
+    }
+
+    private void initLogo(){
+        /**
+         *
+         */
+        // 设置 QMUILinearLayout 阴影颜色和圆角
+        QMUILinearLayout qmuiLayout = findViewById(R.id.qmuiLayout);
+//        qmuiLayout.setShadowColor(0xff0000ff); // 蓝色阴影
+        int qradius=QMUILayoutHelper.RADIUS_OF_HALF_VIEW_WIDTH;
+        qmuiLayout.setRadius(qradius);
+        qmuiLayout.setRadiusAndShadow(qradius,
+                QMUIDisplayHelper.dp2px(MainActivity.this,11),
+                0.6f);
+    }
+
+    private void initLoginEditText(){
+        /**
+         *
+         */
+        // 设置登陆文本输入框阴影
+        QMUILinearLayout loginQMUILL = findViewById(R.id.loginQMUILL);
+        int LoginRadius=15;
+//        loginQMUILL.setRadius(LoginRadius);
+        loginQMUILL.setRadiusAndShadow(LoginRadius,
+                QMUIDisplayHelper.dp2px(MainActivity.this,11),
+                0.6f);
     }
 
     public void loginRequest(String user, String password){
