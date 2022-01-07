@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">SimpleBeta</string>
+    <string name="user_name">用户名</string>
+    <string name="password">密码</string>
+    <string name="login">登录</string>
+    <string name="signup">注册</string>
+    <string name="receiver_name">收件人姓名</string>
+    <string name="receiver_phone">收件人电话</string>
+    <string name="receiver_address">收件人住址</string>
+    <string name="Sender_id">派送人编号</string>
+    <string name="confirm">确认添加</string>
+    <string name="cancel">重置输入</string>
+    <string name="scan">扫描二维码</string>
+    <string name="prev">上一个</string>
+    <string name="next">下一个</string>
+</resources>

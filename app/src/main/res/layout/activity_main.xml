@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qmuiteam.qmui.widget.QMUIWindowInsetLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/signUpBt"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/qmui_topbar_height"
+        android:background="@color/qmui_config_color_white"
+        android:fitsSystemWindows="true">
+        <!-- Something else -->
+        <com.qmuiteam.qmui.layout.QMUILinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginTop="50dp">
+            <com.qmuiteam.qmui.layout.QMUILinearLayout
+                android:id="@+id/qmuiLayout"
+                android:layout_height="100dp"
+                android:layout_width="100dp"
+                android:gravity="center"
+                android:layout_marginBottom="50dp"
+                app:qmui_outerNormalColor="?attr/qmui_skin_support_color_background"
+                app:qmui_borderColor="?attr/qmui_skin_support_color_separator"
+                android:fitsSystemWindows="true">
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="600px"
+                    android:maxWidth="600px"
+                    android:src="@mipmap/favicon" />
+            </com.qmuiteam.qmui.layout.QMUILinearLayout>
+            <com.qmuiteam.qmui.layout.QMUILinearLayout
+                android:id="@+id/loginQMUILL"
+                android:layout_width="350dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginBottom="50dp"
+                android:background="#F5F5F5">
+                <com.qmuiteam.qmui.layout.QMUILinearLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    app:qmui_bottomDividerColor="#000000"
+
+                    android:gravity="center">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        app:srcCompat="@drawable/user_login"
+                        tools:ignore="VectorDrawableCompat">
+                    </androidx.appcompat.widget.AppCompatImageView>
+
+                    <EditText
+                        android:id="@+id/usernameIt"
+                        android:layout_width="300dp"
+                        android:layout_height="match_parent"
+                        android:hint="UID"
+                        android:gravity="left"
+                        android:inputType="textPersonName"
+                        android:selectAllOnFocus="true"
+                        android:textColorHint="#95A1AA"
+                        android:padding="8dp"
+                        android:background="@null"
+                        />
+                </com.qmuiteam.qmui.layout.QMUILinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#000000" />
+
+                <com.qmuiteam.qmui.widget.QMUIFloatLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:gravity="left">
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        app:srcCompat="@drawable/passwd_login"
+                        tools:ignore="VectorDrawableCompat">
+                    </androidx.appcompat.widget.AppCompatImageView>
+
+                    <EditText
+                        android:id="@+id/passwordIt"
+                        android:layout_width="300dp"
+                        android:layout_height="match_parent"
+                        android:hint="PASSWORD"
+                        android:gravity="left"
+                        android:inputType="textPassword"
+                        android:selectAllOnFocus="true"
+                        android:textColorHint="#95A1AA"
+                        android:padding="8dp"
+                        android:background="@null"/>
+                </com.qmuiteam.qmui.widget.QMUIFloatLayout>
+            </com.qmuiteam.qmui.layout.QMUILinearLayout>
+
+
+            <com.qmuiteam.qmui.layout.QMUILinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                    android:id="@+id/loginBt"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:text="@string/login"
+                    android:textSize="24sp"
+                    app:qmui_borderColor="@color/qmui_btn_blue_border"
+                    app:qmui_backgroundColor="@color/qmui_btn_blue_border"
+                    android:textColor="@color/white"/>
+
+                <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                    android:id="@+id/signupBt"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="120px"
+                    android:text="@string/signup"
+                    android:textSize="24sp"
+                    app:qmui_borderColor="@color/qmui_btn_blue_border"
+                    app:qmui_backgroundColor="@color/qmui_btn_blue_border"
+                    android:textColor="@color/white"/>
+            </com.qmuiteam.qmui.layout.QMUILinearLayout>
+
+
+
+
+        </com.qmuiteam.qmui.layout.QMUILinearLayout>
+
+    </ScrollView>
+
+
+
+    <com.qmuiteam.qmui.widget.QMUITopBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:id="@+id/loginTopbar"
+        />
+
+
+
+
+</com.qmuiteam.qmui.widget.QMUIWindowInsetLayout>
