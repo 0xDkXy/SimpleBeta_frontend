@@ -40,6 +40,8 @@ import java.util.Map;
 
 import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
 
+import com.example.simpleapp.model.DataController;
+
 public class UserActivity extends AppCompatActivity {
 
     private static final String sb="simplebeta";
@@ -86,7 +88,7 @@ public class UserActivity extends AppCompatActivity {
             @Override
             public void run() {
 //                jsobj=getJson(UID,token);
-                json[0] = getJson(UID, token);
+                json[0] = getUserInfo(UID, token);
             }
         });
         reqThread.start();
@@ -176,41 +178,17 @@ public class UserActivity extends AppCompatActivity {
         }
     }
 
-    // ******************** 获取json **********************
-    protected JSONObject getJson(String UID, String token){
-        HttpURLConnection connection = null;
-        try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("UID", UID);
-            params.put("token", token);
-            JSONObject jsonParam =new JSONObject(params);
-            URL url = new URL("http://0xdkxy.top:10000/user/getCostInfo");
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(3000);
-            connection.setReadTimeout(3000);
-            //设置请求方式 GET / POST 一定要大小
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json"); // 设置发送数据的格式
-            connection.setRequestProperty("accept", "application/json"); // 设置发送数据的格式
-            connection.setDoInput(true);
-            connection.setDoOutput(false);
-            connection.connect();
-            DataOutputStream dos=new DataOutputStream(connection.getOutputStream());
-            dos.writeBytes(jsonParam.toString());
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-                String line;
-                String res = "";
-                while ((line = reader.readLine()) != null) {
-                    res += line;
-                }
-                reader.close();
-                JSONObject jo = new JSONObject(res);
-                return jo;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    /**
+     * 获取派送员对应的用户数据
+     * @param UID 派送员账号
+     * @param token 令牌
+     * @return 用户数据
+     */
+    private JSONObject getUserInfo(String UID, String token) {
+        Map<String,Object> params = new HashMap<>();
+        params.put("UID", UID);
+        params.put("token", token);
+        return DataController.getJson(params,"http://0xdkxy.top:10000/user/getCostInfo");
     }
+
 }

@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.simpleapp.requests.HttpRequest;
+
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +52,14 @@ public class MainActivity extends AppCompatActivity {
         initTopBar();
         initLogo();
         initLoginEditText();
-
+        initLogin();
     }
-    private void initLogin(String UID,String passwd){
-        /**
-         *
-         */
+
+    /**
+     * xxxxx
+     */
+    private void initLogin(){
+
         EditText userNameIt = findViewById(R.id.usernameIt);
         EditText passwordIt = findViewById(R.id.passwordIt);
 
@@ -99,10 +103,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 初始化topbar
+     */
     private void initTopBar(){
-        /**
-         * 初始化topbar
-         */
+
         // 设置topbar title
         QMUITopBarLayout loginTopbar=findViewById(R.id.loginTopbar);
         loginTopbar.setTitle("LOGIN");
@@ -111,10 +116,11 @@ public class MainActivity extends AppCompatActivity {
         QMUIStatusBarHelper.translucent(this);
     }
 
+    /**
+     * 初始化logo
+     */
     private void initLogo(){
-        /**
-         *
-         */
+
         // 设置 QMUILinearLayout 阴影颜色和圆角
         QMUILinearLayout qmuiLayout = findViewById(R.id.qmuiLayout);
 //        qmuiLayout.setShadowColor(0xff0000ff); // 蓝色阴影
@@ -125,11 +131,11 @@ public class MainActivity extends AppCompatActivity {
                 0.6f);
     }
 
+    /**
+     *设置登陆文本输入框阴影
+     */
     private void initLoginEditText(){
-        /**
-         *
-         */
-        // 设置登陆文本输入框阴影
+
         QMUILinearLayout loginQMUILL = findViewById(R.id.loginQMUILL);
         int LoginRadius=15;
 //        loginQMUILL.setRadius(LoginRadius);
@@ -138,28 +144,6 @@ public class MainActivity extends AppCompatActivity {
                 0.6f);
     }
 
-    private HttpURLConnection initConn(String UrlApi){
-        /**
-         *
-         */
-        HttpURLConnection conn = null;
-        try{
-            URL url = new URL(UrlApi);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(3000);
-            conn.setReadTimeout(3000);
-            //设置请求方式 GET / POST 一定要大小
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json"); // 设置发送数据的格式
-            conn.setRequestProperty("accept", "application/json"); // 设置发送数据的格式
-            conn.setDoInput(true);
-            conn.setDoOutput(false);
-            conn.connect();
-        }catch (Exception e){
-            Log.e("HttpConn",e.getMessage());
-        }
-        return conn;
-    }
 
     private void loginRequest(String user, String password){
         HttpURLConnection connection = null;
@@ -168,7 +152,8 @@ public class MainActivity extends AppCompatActivity {
             params.put("id", user);
             params.put("passwd", password);
             JSONObject jsonParam =new JSONObject(params);
-            connection = initConn("http://0xdkxy.top:10000/login/signIn");
+//            connection = initConn("http://0xdkxy.top:10000/login/signIn");
+            connection = HttpRequest.getRequest("http://0xdkxy.top:10000/login/signIn","POST");
             DataOutputStream dos=new DataOutputStream(connection.getOutputStream());
             dos.writeBytes(jsonParam.toString());
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -212,7 +197,8 @@ public class MainActivity extends AppCompatActivity {
             params.put("id", user);
             params.put("passwd", password);
             JSONObject jsonParam = new JSONObject(params);
-            connection = initConn("http://0xdkxy.top:10000/login/signUp");
+//            connection = initConn("http://0xdkxy.top:10000/login/signUp");
+            connection = HttpRequest.getRequest("http://0xdkxy.top:10000/login/signUp","POST");
             DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
             dos.writeBytes(jsonParam.toString());
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
