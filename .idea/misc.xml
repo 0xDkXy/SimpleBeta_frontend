@@ -11,6 +11,7 @@
         <entry key="..\:/Code/SimpleApp/app/src/main/res/drawable/listitem_background.xml" value="0.14947916666666666" />
         <entry key="..\:/Code/SimpleApp/app/src/main/res/drawable/logo.xml" value="0.14947916666666666" />
         <entry key="..\:/Code/SimpleApp/app/src/main/res/drawable/pager_layout_item_bg.xml" value="0.2638888888888889" />
+        <entry key="..\:/Code/SimpleApp/app/src/main/res/drawable/pager_layout_item_bg_0.xml" value="0.1515625" />
         <entry key="..\:/Code/SimpleApp/app/src/main/res/drawable/passwd_login.xml" value="0.14947916666666666" />
         <entry key="..\:/Code/SimpleApp/app/src/main/res/drawable/user_image.xml" value="0.14947916666666666" />
         <entry key="..\:/Code/SimpleApp/app/src/main/res/drawable/user_login.xml" value="0.14947916666666666" />
@@ -21,7 +22,9 @@
         <entry key="..\:/Code/SimpleApp/app/src/main/res/layout/list_item.xml" value="0.264" />
         <entry key="..\:/Code/SimpleApp/app/src/main/res/layout/list_item_admin.xml" value="0.13333333333333333" />
         <entry key="..\:/Code/SimpleApp/app/src/main/res/layout/pull_horizontal_layout.xml" value="0.176" />
+        <entry key="..\:/Code/SimpleApp/app/src/main/res/layout/pull_vertical_layout.xml" value="0.264" />
         <entry key="..\:/Code/SimpleApp/app/src/main/res/layout/recycler_view_item.xml" value="0.25885416666666666" />
+        <entry key="..\:/Code/SimpleApp/app/src/main/res/layout/recycler_view_item_0.xml" value="0.264" />
       </map>
     </option>
   </component>

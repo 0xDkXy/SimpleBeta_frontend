@@ -120,10 +120,17 @@ public class DataController {
 
         for (JSONObject item:jslist){
             try {
-                String temp = "用户：" + item.getString("CName") +
-                        "\n电话：" + item.getString("phone") +
-                        "\n地址：" + item.getString("addres") +
-                        "\n派送员：" + item.getString("UID");
+                String temp;
+                if(item.length() == 5) {
+                    temp = "用户：" + item.getString("CName") +
+                            "\n电话：" + item.getString("phone") +
+                            "\n地址：" + item.getString("addres") +
+                            "\n派送员：" + item.getString("UID");
+                } else {
+                    temp = "用户：" + item.getString("CName") +
+                            "\n电话：" + item.getString("phone") +
+                            "\n地址：" + item.getString("addres");
+                }
                 Log.d(tag,temp);
                 listitem.add(temp);
             }catch (Exception e){
