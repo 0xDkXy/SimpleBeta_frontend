@@ -1,8 +1,6 @@
 package com.example.simpleapp.model;
 
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.simpleapp.AdminActivity;
 import com.example.simpleapp.requests.HttpRequest;
@@ -66,6 +64,22 @@ public class DataController {
         }
     }
 
+    public static void deleteUserInfo(String Url,String UID,String CID,String token) {
+        HttpURLConnection connection = null;
+        Url = Url + "?UID=" + UID + "&CID=" + CID + "&token=" + token;
+        try {
+            connection = HttpRequest.getRequest(Url,"GET");
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                Log.i(teg,"删除快递信息成功！");
+            }else{
+                Log.e(teg,"删除快递信息失败！");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(teg,"删除快递信息失败！");
+        }
+    }
+
     static public List<String> JSON_to_list(JSONObject res) {
         String tag = "json2list";
         List<JSONObject> jslist = new ArrayList<JSONObject>();
@@ -80,16 +94,11 @@ public class DataController {
         List<String> listitem = new ArrayList<String>();
 
         for (JSONObject item:jslist){
-//            Map<String, Object> showitem = new HashMap<String, Object>();
             try {
                 String temp = "用户：" + item.getString("CName") +
                         "\n电话：" + item.getString("phone") +
                         "\n地址：" + item.getString("addres") +
                         "\n派送员：" + item.getString("UID");
-//                        showitem.put("CName", item.getString("CName"));
-//                showitem.put("phone", item.getString("phone"));
-//                showitem.put("addres", item.getString("addres"));
-//                showitem.put("UID", item.getString("UID"));
                 Log.d(tag,temp);
                 listitem.add(temp);
             }catch (Exception e){
