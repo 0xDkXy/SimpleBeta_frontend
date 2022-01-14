@@ -23,12 +23,39 @@
         android:layout_height="0dp"
         android:background="?attr/qmui_skin_support_color_background">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/qmui_config_color_white"
-            app:qmui_is_target="true"/>
+            app:qmui_is_target="true">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/qmui_config_color_white"
+                app:qmui_is_target="true"/>
+
+            <com.qmuiteam.qmui.layout.QMUILinearLayout
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="50dp"
+                android:id="@+id/addItemBtnLyt">
+                <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                    android:id="@+id/addItemBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:qmui_borderColor="@color/qmui_btn_blue_border"
+                    app:qmui_backgroundColor="@color/qmui_btn_blue_border"
+                    android:text="新增"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"/>
+            </com.qmuiteam.qmui.layout.QMUILinearLayout>
+
+        </RelativeLayout>
+
+
 
         <com.qmuiteam.qmui.widget.QMUIVerticalTextView
             android:layout_width="wrap_content"

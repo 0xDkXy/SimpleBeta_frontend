@@ -33,9 +33,12 @@ import android.widget.Toast;
 import com.example.simpleapp.model.DataController;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.qmuiteam.qmui.QMUIInterpolatorStaticHolder;
+import com.qmuiteam.qmui.layout.QMUILayoutHelper;
+import com.qmuiteam.qmui.layout.QMUILinearLayout;
 import com.qmuiteam.qmui.recyclerView.QMUIRVItemSwipeAction;
 import com.qmuiteam.qmui.recyclerView.QMUISwipeAction;
 import com.qmuiteam.qmui.recyclerView.QMUISwipeViewHolder;
+import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.QMUITopBarLayout;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -46,6 +49,7 @@ import com.qmuiteam.qmui.widget.pullLayout.QMUIPullLayout;
 import com.example.simpleapp.model.DataController;
 import com.example.simpleapp.adaptor.QDRecyclerViewAdapter;
 import com.example.simpleapp.requests.HttpRequest;
+import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
 import org.json.JSONObject;
 
@@ -64,6 +68,9 @@ public class AdminActivity extends AppCompatActivity {
     QMUITopBarLayout mTopBar;
     QMUIPullLayout mPullLayout;
     RecyclerView mRecyclerView;
+    QMUILinearLayout mAddItemBtnLyt;
+    QMUIRoundButton mAddItemBtn;
+
     private QDRecyclerViewAdapter mAdapter;
     private JSONObject allUserInfo;
     private String mTopBarTitle = "所有用户";
@@ -78,10 +85,20 @@ public class AdminActivity extends AppCompatActivity {
         mTopBar=findViewById(R.id.topbar);
         mPullLayout=findViewById(R.id.pull_layout);
         mRecyclerView=findViewById(R.id.recyclerView);
+        mAddItemBtn = findViewById(R.id.addItemBtn);
+        mAddItemBtnLyt = findViewById(R.id.addItemBtnLyt);
 
+        initAddItemBtn();
         initTopBar();
         initData();
 
+    }
+
+    private void initAddItemBtn() {
+        int qradius= QMUILayoutHelper.RADIUS_OF_HALF_VIEW_WIDTH;
+        mAddItemBtnLyt.setRadiusAndShadow(qradius,
+                QMUIDisplayHelper.dp2px(AdminActivity.this,10),
+                0.8f);
     }
 
     class Adapter extends QDRecyclerViewAdapter {
