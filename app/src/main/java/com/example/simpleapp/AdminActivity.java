@@ -75,6 +75,10 @@ public class AdminActivity extends AppCompatActivity {
     private JSONObject allUserInfo;
     private String mTopBarTitle = "所有用户";
     private String token;
+    private boolean isSuc = false;
+    private String mAddUserInfo;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,17 +92,109 @@ public class AdminActivity extends AppCompatActivity {
         mAddItemBtn = findViewById(R.id.addItemBtn);
         mAddItemBtnLyt = findViewById(R.id.addItemBtnLyt);
 
-        initAddItemBtn();
+
         initTopBar();
         initData();
+        initAddItemBtn();
 
     }
+
+
 
     private void initAddItemBtn() {
         int qradius= QMUILayoutHelper.RADIUS_OF_HALF_VIEW_WIDTH;
         mAddItemBtnLyt.setRadiusAndShadow(qradius,
                 QMUIDisplayHelper.dp2px(AdminActivity.this,10),
                 0.8f);
+
+
+        String CName,UID,addres,phone;
+        String temp[] = {"CName","phone","addres","UID"};
+        final String info[] = new String[4];
+        final QMUIDialog.EditTextDialogBuilder Builder[] = new QMUIDialog.EditTextDialogBuilder[4];
+        for(int i=0;i<4;++i){
+            Builder[i]=new QMUIDialog.EditTextDialogBuilder(AdminActivity.this);
+        }
+
+
+        for(int i=0;i<4;++i){
+            final int ii=i;
+            Builder[i].setTitle("添加信息")
+                    .setPlaceholder(temp[i])
+                    .setInputType(InputType.TYPE_CLASS_TEXT)
+                    .addAction("取消", new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .addAction("确定", new QMUIDialogAction.ActionListener() {
+                        @Override
+                        public void onClick(QMUIDialog dialog, int index) {
+                            CharSequence text = Builder[ii].getEditText().getText();
+                            if (text != null && text.length() > 0) {
+//                                Toast.makeText(AdminActivity.this, "您的昵称: " + text, Toast.LENGTH_SHORT).show();
+                                info[ii]=text.toString();
+//                                Toast.makeText(AdminActivity.this, info[ii], Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                                if(ii !=3)
+                                    Builder[ii+1].show();
+                                else {
+                                    mAddUserInfo="用户：" + info[0] +
+                                            "\n电话：" + info[1] +
+                                            "\n地址：" + info[2] +
+                                            "\n派送员：" + info[3];
+                                    Thread threadt=new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+//                                            addExpress(info[0],info[1],info[2],info[3],token);
+                                            isSuc=updateUserInfo(info[0],info[1],info[2],info[3],token);
+                                            try {
+                                                Thread.sleep(1400);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                    threadt.start();
+                                    QMUITipDialog tipDialog= new QMUITipDialog.Builder(AdminActivity.this)
+                                            .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
+                                            .setTipWord("正在添加")
+                                            .create();
+                                    tipDialog.show();
+                                    try {
+                                        threadt.join();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    tipDialog.dismiss();
+//                                    mRecyclerView.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            tipDialog.dismiss();
+//                                        }
+//                                    },1500);
+                                    if(isSuc){
+                                        Toast.makeText(AdminActivity.this, "插入快递信息成功！",
+                                            Toast.LENGTH_SHORT).show();
+                                        onRefreshData();
+                                    }else{
+                                        Toast.makeText(AdminActivity.this, "插入快递信息失败！",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(AdminActivity.this, "请填入", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+        mAddItemBtn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+//                listDialog.show();
+                Builder[0].show();
+            }
+        });
     }
 
     class Adapter extends QDRecyclerViewAdapter {
@@ -130,6 +226,13 @@ public class AdminActivity extends AppCompatActivity {
         }
 
     }
+
+    private void onRefreshData() {
+        List<String> data = new ArrayList<>();
+        data.add(mAddUserInfo);
+        mAdapter.append(data);
+    }
+
     /**
      * 初始化状态栏,设置沉浸式状态栏
      */
@@ -180,25 +283,10 @@ public class AdminActivity extends AppCompatActivity {
 //        mAdapter.setItemCount(10);
 //        mRecyclerView.setAdapter(mAdapter);
 
-
         mAdapter = new Adapter(allUserInfo);
         mRecyclerView.setAdapter(mAdapter);
 
         QMUIRVItemSwipeAction swipeAction = new QMUIRVItemSwipeAction(true, new QMUIRVItemSwipeAction.Callback() {
-            @Override
-            public void onClickAction(QMUIRVItemSwipeAction swipeAction, RecyclerView.ViewHolder selected, QMUISwipeAction action) {
-                super.onClickAction(swipeAction, selected, action);
-                Looper.prepare();
-                Toast.makeText(AdminActivity.this,
-                        "你点击了第 " + selected.getAdapterPosition() + " 个 item 的" + action.getText(),
-                        Toast.LENGTH_SHORT).show();
-                Looper.loop();
-//                if(action == mAdapter.mDeleteAction){
-//                    mAdapter.remove(selected.getAdapterPosition());
-//                }else{
-//                    swipeAction.clear();
-//                }
-            }
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder,int direction) {
@@ -269,7 +357,8 @@ public class AdminActivity extends AppCompatActivity {
      * @param senderId 派送员id
      * @param token 管理员令牌
      */
-    private void updateUserInfo(String receiverName, String receiverPhone, String receiverAddress, String senderId, String token) {
+    private boolean updateUserInfo(String receiverName, String receiverPhone, String receiverAddress, String senderId, String token) {
+        String tag="updateUserInfo";
         Map<String, Object> params = new HashMap<>();
         params.put("CName", receiverName);
         params.put("addres", receiverAddress);
@@ -277,51 +366,22 @@ public class AdminActivity extends AppCompatActivity {
         params.put("UID", senderId);
         params.put("token", token);
         if (DataController.updateUserInfo(params,"http://0xdkxy.top:10000/user/addInfo")) {
-            Looper.prepare();
-            Toast.makeText(AdminActivity.this, "插入快递信息成功！",
-                    Toast.LENGTH_SHORT).show();
-            Looper.loop();
+            Log.i(tag,"插入快递信息成功！");
+//            Looper.prepare();
+//            Toast.makeText(AdminActivity.this, "插入快递信息成功！",
+//                    Toast.LENGTH_SHORT).show();
+//            Looper.loop();
+            return true;
         } else {
-            Looper.prepare();
-            Toast.makeText(AdminActivity.this, "插入快递信息失败！",
-                    Toast.LENGTH_SHORT).show();
-            Looper.loop();
+            Log.e(tag,"插入快递信息失败！");
+//            Looper.prepare();
+//            Toast.makeText(AdminActivity.this, "插入快递信息失败！",
+//                    Toast.LENGTH_SHORT).show();
+//            Looper.loop();
+            return false;
         }
     }
 
-//    public void addExpress(String receiverName, String receiverPhone, String receiverAddress, String senderId, String token){
-//        HttpURLConnection connection = null;
-//        try {
-//            Map<String, Object> params = new HashMap<>();
-//            params.put("CName", receiverName);
-//            params.put("addres", receiverAddress);
-//            params.put("phone", receiverPhone);
-//            params.put("UID", senderId);
-//            params.put("token", token);
-//            JSONObject jsonParam =new JSONObject(params);
-//            URL url = new URL("http://0xdkxy.top:10000/user/addInfo");
-//            connection = (HttpURLConnection) url.openConnection();
-//            connection.setConnectTimeout(3000);
-//            connection.setReadTimeout(3000);
-//            //设置请求方式 GET / POST 一定要大小
-//            connection.setRequestMethod("POST");
-//            connection.setRequestProperty("Content-Type", "application/json"); // 设置发送数据的格式
-//            connection.setRequestProperty("accept", "application/json"); // 设置发送数据的格式
-//            connection.setDoInput(true);
-//            connection.setDoOutput(false);
-//            connection.connect();
-//            DataOutputStream dos=new DataOutputStream(connection.getOutputStream());
-//            dos.writeBytes(jsonParam.toString());
-//            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-//                Looper.prepare();
-//                Toast.makeText(AdminActivity.this, "插入快递信息成功！",
-//                        Toast.LENGTH_SHORT).show();
-//                Looper.loop();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     /**
      * 获取全部用户的数据

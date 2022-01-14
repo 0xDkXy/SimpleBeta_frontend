@@ -17,6 +17,7 @@ package com.example.simpleapp.adaptor;
  */
 
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,10 @@ public class QDRecyclerViewAdapter extends RecyclerView.Adapter<QDRecyclerViewAd
         return mDatas;
     }
 
+    public void append(@NonNull List<String> items){
+        mItems.addAll(items);
+        notifyDataSetChanged();
+    }
 //    public void addItem(int position) {
 //        if (position > mItems.size()) return;
 //
@@ -126,6 +131,7 @@ public class QDRecyclerViewAdapter extends RecyclerView.Adapter<QDRecyclerViewAd
         public void setText(String text) {
             mTextView.setText(text);
         }
+
 
 
         @Override
