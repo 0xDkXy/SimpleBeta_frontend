@@ -8,26 +8,40 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.ThemedSpinnerAdapter;
 import android.widget.Toast;
 
 import com.example.simpleapp.model.DataController;
 import com.qmuiteam.qmui.QMUIInterpolatorStaticHolder;
+import com.qmuiteam.qmui.layout.QMUIFrameLayout;
 import com.qmuiteam.qmui.layout.QMUILayoutHelper;
 import com.qmuiteam.qmui.layout.QMUILinearLayout;
 import com.qmuiteam.qmui.recyclerView.QMUIRVItemSwipeAction;
+import com.qmuiteam.qmui.skin.QMUISkinHelper;
+import com.qmuiteam.qmui.skin.QMUISkinManager;
+import com.qmuiteam.qmui.skin.QMUISkinValueBuilder;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
+import com.qmuiteam.qmui.util.QMUIResHelper;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.QMUITopBarLayout;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
+import com.qmuiteam.qmui.widget.popup.QMUIFullScreenPopup;
+import com.qmuiteam.qmui.widget.popup.QMUIPopups;
 import com.qmuiteam.qmui.widget.pullLayout.QMUIPullLayout;
 
 import com.example.simpleapp.adaptor.QDRecyclerViewAdapter;
@@ -178,6 +192,7 @@ public class AdminActivity extends AppCompatActivity {
         });
     }
 
+    private Bitmap mQrCodeBitmap;
     class Adapter extends QDRecyclerViewAdapter {
 
         public Adapter(JSONObject res) {
@@ -207,12 +222,87 @@ public class AdminActivity extends AppCompatActivity {
             root.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
+                    int itemPos = vh.getAdapterPosition();
                     Toast.makeText(AdminActivity.this,
                             "click position=" + vh.getAdapterPosition(),
                             Toast.LENGTH_SHORT).show();
+                    try {
+                        onPopupViewShow(v,itemPos);
+                    } catch (JSONException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             return vh;
+        }
+
+        /**
+         * 显示浮层
+         * @param v
+         * @param Pos 卡片序号
+         */
+        private void onPopupViewShow(View v,int Pos) throws JSONException, InterruptedException {
+            QMUISkinValueBuilder builder = QMUISkinValueBuilder.acquire();
+            QMUIFrameLayout frameLayout = new QMUIFrameLayout(AdminActivity.this);
+            frameLayout.setBackground(
+                    QMUIResHelper.getAttrDrawable(AdminActivity.this, R.attr.qmui_skin_support_popup_bg));
+            builder.background(R.attr.qmui_skin_support_popup_bg);
+            QMUISkinHelper.setSkinValue(frameLayout, builder);
+            frameLayout.setRadius(QMUIDisplayHelper.dp2px(AdminActivity.this, 12));
+            int padding = QMUIDisplayHelper.dp2px(AdminActivity.this, 20);
+            frameLayout.setPadding(padding, padding, padding, padding);
+
+            ImageView imageView = new ImageView(AdminActivity.this);
+//            imageView.setLineSpacing(QMUIDisplayHelper.dp2px(AdminActivity.this, 4), 1.0f);
+            imageView.setPadding(padding, padding, padding, padding);
+//            imageView.setText("这是自定义显示的内容");
+//            imageView.setTextColor(
+//                    QMUIResHelper.getAttrColor(AdminActivity.this, R.attr.app_skin_common_title_text_color));
+
+            builder.clear();
+            builder.textColor(R.attr.app_skin_common_title_text_color);
+            QMUISkinHelper.setSkinValue(imageView, builder);
+//            imageView.setGravity(Gravity.CENTER);
+//            imageView.
+
+            Thread getQR = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        mQrCodeBitmap = DataController.getQRCode("admin",
+                                allUserInfo.getJSONObject(String.valueOf(Pos)).getString("CID"),
+                                token);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            getQR.start();
+            getQR.join();
+            imageView.setImageBitmap(mQrCodeBitmap);
+            builder.release();
+
+            int size = QMUIDisplayHelper.dp2px(AdminActivity.this, 200);
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(size, size);
+            frameLayout.addView(imageView, lp);
+
+            QMUIPopups.fullScreenPopup(AdminActivity.this)
+                    .addView(frameLayout)
+                    .closeBtn(true)
+                    .skinManager(QMUISkinManager.defaultInstance(AdminActivity.this))
+                    .onBlankClick(new QMUIFullScreenPopup.OnBlankClickListener() {
+                        @Override
+                        public void onBlankClick(QMUIFullScreenPopup popup) {
+                            Toast.makeText(AdminActivity.this, "点击到空白区域", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .onDismiss(new PopupWindow.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            Toast.makeText(AdminActivity.this, "onDismiss", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .show(v);
         }
 
         @Override

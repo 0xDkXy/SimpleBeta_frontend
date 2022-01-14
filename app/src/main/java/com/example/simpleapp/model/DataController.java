@@ -1,5 +1,7 @@
 package com.example.simpleapp.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.example.simpleapp.AdminActivity;
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -77,6 +80,28 @@ public class DataController {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(teg,"删除快递信息失败！");
+        }
+    }
+
+    public static Bitmap getQRCode(String UID, String CID, String token){
+        HttpURLConnection connection = null;
+//        String Url="https://tse1-mm.cn.bing.net/th/id/OIP-C.2vI-VU9hUM1TGkojjOSfxQHaKe?w=202&h=286&c=7&r=0&o=5&dpr=1.25&pid=1.7";
+        String Url="http://0xdkxy.top:10000/user/getQR?UID=" + UID + "&CID=" + CID + "&token=" +token;
+        try {
+            connection = HttpRequest.getRequest(Url,"GET");
+//            connection.setDoInput(true);
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                InputStream inputStream = connection.getInputStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                return bitmap;
+            }else{
+                Log.e(teg,"获取二维码失败");
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(teg,"获取二维码失败");
+            return null;
         }
     }
 
