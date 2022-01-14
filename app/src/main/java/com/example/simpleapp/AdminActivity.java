@@ -1,43 +1,27 @@
 package com.example.simpleapp;
 
-import static android.app.PendingIntent.getActivity;
-
-import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlertDialog;
 import android.app.Service;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Vibrator;
-import android.os.Looper;
 import android.os.Vibrator;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.simpleapp.model.DataController;
-import com.journeyapps.barcodescanner.CaptureActivity;
 import com.qmuiteam.qmui.QMUIInterpolatorStaticHolder;
 import com.qmuiteam.qmui.layout.QMUILayoutHelper;
 import com.qmuiteam.qmui.layout.QMUILinearLayout;
 import com.qmuiteam.qmui.recyclerView.QMUIRVItemSwipeAction;
-import com.qmuiteam.qmui.recyclerView.QMUISwipeAction;
-import com.qmuiteam.qmui.recyclerView.QMUISwipeViewHolder;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.QMUITopBarLayout;
@@ -46,18 +30,11 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 import com.qmuiteam.qmui.widget.pullLayout.QMUIPullLayout;
 
-import com.example.simpleapp.model.DataController;
 import com.example.simpleapp.adaptor.QDRecyclerViewAdapter;
-import com.example.simpleapp.requests.HttpRequest;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,16 +76,12 @@ public class AdminActivity extends AppCompatActivity {
 
     }
 
-
-
     private void initAddItemBtn() {
         int qradius= QMUILayoutHelper.RADIUS_OF_HALF_VIEW_WIDTH;
         mAddItemBtnLyt.setRadiusAndShadow(qradius,
                 QMUIDisplayHelper.dp2px(AdminActivity.this,10),
                 0.8f);
 
-
-        String CName,UID,addres,phone;
         String temp[] = {"CName","phone","addres","UID"};
         final String info[] = new String[4];
         final QMUIDialog.EditTextDialogBuilder Builder[] = new QMUIDialog.EditTextDialogBuilder[4];
@@ -133,9 +106,7 @@ public class AdminActivity extends AppCompatActivity {
                         public void onClick(QMUIDialog dialog, int index) {
                             CharSequence text = Builder[ii].getEditText().getText();
                             if (text != null && text.length() > 0) {
-//                                Toast.makeText(AdminActivity.this, "您的昵称: " + text, Toast.LENGTH_SHORT).show();
                                 info[ii]=text.toString();
-//                                Toast.makeText(AdminActivity.this, info[ii], Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                                 if(ii !=3)
                                     Builder[ii+1].show();
@@ -263,7 +234,6 @@ public class AdminActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
         mPullLayout.setActionListener(new QMUIPullLayout.ActionListener() {
             @Override
             public void onActionTriggered(@NonNull QMUIPullLayout.PullAction pullAction) {
@@ -367,21 +337,12 @@ public class AdminActivity extends AppCompatActivity {
         params.put("token", token);
         if (DataController.updateUserInfo(params,"http://0xdkxy.top:10000/user/addInfo")) {
             Log.i(tag,"插入快递信息成功！");
-//            Looper.prepare();
-//            Toast.makeText(AdminActivity.this, "插入快递信息成功！",
-//                    Toast.LENGTH_SHORT).show();
-//            Looper.loop();
             return true;
         } else {
             Log.e(tag,"插入快递信息失败！");
-//            Looper.prepare();
-//            Toast.makeText(AdminActivity.this, "插入快递信息失败！",
-//                    Toast.LENGTH_SHORT).show();
-//            Looper.loop();
             return false;
         }
     }
-
 
     /**
      * 获取全部用户的数据
@@ -395,5 +356,4 @@ public class AdminActivity extends AppCompatActivity {
         params.put("token", token);
         return DataController.getJson(params,"http://0xdkxy.top:10000/user/getCostInfo");
     }
-
 }
