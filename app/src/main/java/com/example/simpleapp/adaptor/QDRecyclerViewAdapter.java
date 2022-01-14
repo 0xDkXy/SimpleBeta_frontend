@@ -27,6 +27,8 @@ import android.widget.TextView;
 
 import com.example.simpleapp.R;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +66,7 @@ public class QDRecyclerViewAdapter extends RecyclerView.Adapter<QDRecyclerViewAd
 //        notifyItemInserted(position);
 //    }
 
-    public void removeItem(int position) {
+    public void removeItem(int position) throws JSONException {
         if (position >= mItems.size()) return;
         mItems.remove(position);
         notifyItemRemoved(position);

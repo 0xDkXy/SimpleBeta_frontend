@@ -31,8 +31,10 @@ import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 import com.qmuiteam.qmui.widget.pullLayout.QMUIPullLayout;
 
 import com.example.simpleapp.adaptor.QDRecyclerViewAdapter;
+import com.example.simpleapp.model.DataController;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -74,6 +76,15 @@ public class AdminActivity extends AppCompatActivity {
         initData();
         initAddItemBtn();
 
+    }
+
+    private void onRefreshUserInfo() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                allUserInfo = getUserInfo("admin",token);
+            }
+        }).start();
     }
 
     private void initAddItemBtn() {
@@ -118,7 +129,6 @@ public class AdminActivity extends AppCompatActivity {
                                     Thread threadt=new Thread(new Runnable() {
                                         @Override
                                         public void run() {
-//                                            addExpress(info[0],info[1],info[2],info[3],token);
                                             isSuc=updateUserInfo(info[0],info[1],info[2],info[3],token);
                                             try {
                                                 Thread.sleep(1400);
@@ -149,6 +159,7 @@ public class AdminActivity extends AppCompatActivity {
                                         Toast.makeText(AdminActivity.this, "插入快递信息成功！",
                                             Toast.LENGTH_SHORT).show();
                                         onRefreshData();
+                                        onRefreshUserInfo();
                                     }else{
                                         Toast.makeText(AdminActivity.this, "插入快递信息失败！",
                                                 Toast.LENGTH_SHORT).show();
@@ -162,7 +173,6 @@ public class AdminActivity extends AppCompatActivity {
         }
         mAddItemBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-//                listDialog.show();
                 Builder[0].show();
             }
         });
@@ -173,6 +183,20 @@ public class AdminActivity extends AppCompatActivity {
         public Adapter(JSONObject res) {
             super();
             super.mItems = DataController.JSON_to_list(res);
+        }
+
+        @Override
+        public void removeItem(int position) throws JSONException {
+            if (position >= mItems.size()) return;
+            String CID=allUserInfo.getJSONObject(String.valueOf(position)).getString("CID");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    DataController.deleteUserInfo("http://0xdkxy.top:10000/user/deleteByCID","admin",CID,token);
+                }
+            }).start();
+            mItems.remove(position);
+            notifyItemRemoved(position);
         }
 
         @Override
@@ -198,6 +222,9 @@ public class AdminActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 刷新recyclerView
+     */
     private void onRefreshData() {
         List<String> data = new ArrayList<>();
         data.add(mAddUserInfo);
@@ -217,7 +244,7 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     /**
-     * 初始化listView以及数据
+     * 初始化RecyclerView以及数据
      */
     private void initData() {
 
@@ -260,7 +287,11 @@ public class AdminActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder,int direction) {
-                mAdapter.removeItem(viewHolder.getAdapterPosition());
+                try {
+                    mAdapter.removeItem(viewHolder.getAdapterPosition());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             /**
